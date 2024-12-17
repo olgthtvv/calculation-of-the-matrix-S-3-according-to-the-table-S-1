@@ -1,0 +1,88 @@
+using System;
+using System.Collections.Generic;
+
+internal class Program
+{
+    static void Main()
+    {
+        int N = 14; // Размер матрицы
+        string[,] matrixS = { //Ваша матрица S^1
+            {"0", "a", "0", "0", "0", "h", "0", "0", "0", "0", "0", "0", "0", "0"},
+            {"a", "0", "b", "0", "d", "h", "u", "0", "0", "0", "0", "0", "0", "0"},
+            {"0", "b", "0", "c", "e", "0", "0", "f", "0", "0", "0", "0", "0", "0"},
+            {"0", "0", "c", "0", "0", "0", "0", "0", "g", "0", "0", "0", "0", "0"},
+            {"0", "d", "e", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"},
+            {"v", "h", "0", "0", "0", "0", "0", "0", "0", "0", "z", "j", "0", "0"},
+            {"0", "u", "0", "0", "0", "0", "0", "0", "0", "t", "0", "0", "o", "0"},
+            {"0", "0", "f", "0", "0", "0", "0", "0", "m", "n", "0", "0", "q", "0"},
+            {"0", "0", "0", "g", "0", "0", "0", "m", "0", "0", "0", "0", "0", "s"},
+            {"0", "0", "0", "0", "0", "0", "t", "n", "0", "0", "0", "0", "0", "0"},
+            {"0", "0", "0", "0", "0", "z", "0", "0", "0", "0", "0", "p", "0", "0"},
+            {"0", "0", "0", "0", "0", "j", "o", "0", "0", "0", "p", "0", "l", "0"},
+            {"0", "0", "0", "0", "0", "0", "0", "q", "0", "0", "0", "l", "0", "k"},
+            {"0", "0", "0", "0", "0", "0", "0", "0", "s", "0", "0", "0", "k", "0"}
+
+        };
+
+        // Вычисление S^3
+        Console.WriteLine("Матрица S:");
+        PrintMatrix(matrixS);
+
+        string[,] matrixS2 = MultiplyMatrices(matrixS, matrixS, N);
+        string[,] matrixS3 = MultiplyMatrices(matrixS2, matrixS, N);
+
+        Console.WriteLine("\nМатрица S^3:");
+        PrintMatrix(matrixS3);
+    }
+
+    static string[,] MultiplyMatrices(string[,] array1, string[,] array2, int N)
+    {
+        string[,] result = new string[N, N];
+
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                if (i == j)
+                {
+                    result[i, j] = "0"; // Устанавливаем диагональные элементы в 0
+                    continue;
+                }
+
+                List<string> terms = new List<string>();
+
+                for (int k = 0; k < N; k++)
+                {
+                    string number1 = array1[i, k];
+                    string number2 = array2[k, j];
+
+                    if (number1 != "0" && number2 != "0")
+                    {
+                        if (number1 == number2)
+                            terms.Add($"{number1}^2");
+                        else
+                            terms.Add($"{number1}*{number2}");
+                    }
+                }
+
+                result[i, j] = terms.Count > 0 ? string.Join(" + ", terms) : "0";
+            }
+        }
+
+        return result;
+    }
+
+    static void PrintMatrix(string[,] matrix)
+    {
+        int rows = matrix.GetLength(0);
+        int cols = matrix.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                Console.WriteLine($"[{i}, {j}]: {matrix[i, j]}");
+            }
+        }
+    }
+}
